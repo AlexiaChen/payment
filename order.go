@@ -6,44 +6,16 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/util/guid"
-	"github.com/shopspring/decimal"
 	"gitlab.landui.cn/gomod/logs"
 	"sort"
 	"time"
 )
 
-const (
-	CreateOrderUri = "/sweep/createOrder"
-)
-
-type Payment struct {
-	UserId        uint
-	UserName      string
-	ProductType   uint32
-	ProductSType  string
-	ProductName   string
-	OrderAmount   decimal.Decimal
-	PaidAmount    decimal.Decimal
-	Ipaddress     string
-	Cpu           uint32
-	Memory        uint32
-	Bandwidth     uint32
-	HardDisks     uint32
-	Disks         uint32
-	Months        uint32
-	InstanceName  string
-	Version       string
-	Type          string
-	APIUriPrefix  string
-	APISignSecret string
-	CallBackUrl   string
-}
-
 type Response struct {
 	Code    int    `json:"code"`
 	Status  string `json:"status"`
 	Message string `json:"message"`
-	Info    Info   `json:"info"`
+	Info    *Info  `json:"info"`
 }
 type Info struct {
 	Id string `json:"id"`
@@ -66,7 +38,8 @@ func (p *Payment) PlaceAnOrder() (*Response, error) {
 	text := fmt.Sprintf("%d%s%s", times, randStr, p.APISignSecret)
 	newText := sorts(text)
 	ciphertext := gmd5.MustEncryptString(newText)
-	param, _ := json.Marshal(placeOrderParam{
+	var orderParams []placeOrderParam
+	orderParam := placeOrderParam{
 		Stype:       p.ProductSType,
 		ProductType: p.ProductType,
 		Name:        p.ProductName,
@@ -84,7 +57,9 @@ func (p *Payment) PlaceAnOrder() (*Response, error) {
 			p.Months,
 			p.Type,
 		),
-	})
+	}
+	orderParams = append(orderParams, orderParam)
+	param, _ := json.Marshal(orderParams)
 	body := map[string]interface{}{
 		"time_stamp":   fmt.Sprintf("%d", times),
 		"nonce_str":    randStr,
@@ -93,7 +68,7 @@ func (p *Payment) PlaceAnOrder() (*Response, error) {
 		"username":     p.UserName,
 		"ordermoney":   p.OrderAmount,
 		"checkmoney":   p.PaidAmount,
-		"param":        param,
+		"param":        string(param),
 		"ipaddress":    p.Ipaddress,
 		"voucher_num":  "0",
 		"coupon_id":    "0",
