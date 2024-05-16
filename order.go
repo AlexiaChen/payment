@@ -33,17 +33,18 @@ type placeOrderParam struct {
 }
 
 type renewOrderParam struct {
-	Stype             string `json:"stype"`
-	ProductType       uint32 `json:"productType"`
-	Name              string `json:"name"`
-	InstanceName      string `json:"instanceName"`
-	InstanceID        string `json:"InstanceID"`
-	Price             string `json:"price"`
-	BuyTime           string `json:"buyTime"`
-	CurrentExpireTime string `json:"currentExpireTime"`
-	RenewExpireTime   string `json:"renewExpireTime"`
-	CallBack          string `json:"callback"`
-	OrderDisposition  string `json:"orderDisposition"`
+	Stype             string   `json:"stype"`
+	ProductType       uint32   `json:"productType"`
+	Name              string   `json:"name"`
+	InstanceName      string   `json:"instanceName"`
+	InstanceID        string   `json:"InstanceID"`
+	VpsIds            []string `json:"vpsIds"`
+	Price             string   `json:"price"`
+	BuyTime           string   `json:"buyTime"`
+	CurrentExpireTime string   `json:"currentExpireTime"`
+	RenewExpireTime   string   `json:"renewExpireTime"`
+	CallBack          string   `json:"callback"`
+	OrderDisposition  string   `json:"orderDisposition"`
 }
 
 // PlaceAnOrder 购买时创建订单
@@ -137,6 +138,7 @@ func (p *Payment) RenewOrder() (*Response, error) {
 		Name:              p.ProductName,
 		InstanceID:        p.InstanceID,
 		InstanceName:      p.InstanceName,
+		VpsIds:            p.VspIds,
 		Price:             p.PaidAmount.String(),
 		BuyTime:           fmt.Sprintf("%d个月", p.Months),
 		CallBack:          p.CallBackUrl,

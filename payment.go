@@ -24,6 +24,7 @@ type Payment struct {
 	Months            uint32
 	InstanceName      string
 	InstanceID        string
+	VspIds            []string
 	Version           string
 	Type              string
 	APIUriPrefix      string

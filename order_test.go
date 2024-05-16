@@ -65,6 +65,7 @@ func TestPayment_RenewOrder(t *testing.T) {
 		CallBackUrl:       "https://rds.st.landui.cn/auth/payment/callback",
 		CurrentExpireTime: "2024-05-01 10:00:00",
 		RenewExpireTime:   "2024-09-01 10:00:00",
+		VspIds:            []string{"122", "123"},
 	}
 
 	res, err := payCenter.RenewOrder()
