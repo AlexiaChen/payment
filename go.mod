@@ -1,4 +1,4 @@
-module gitlab.landui.cn/gomod/payment
+module github.com/AlexiaChen/payment
 
 go 1.20
 
