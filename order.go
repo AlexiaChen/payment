@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
+	"time"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/util/guid"
-	"gitlab.landui.cn/gomod/logs"
-	"sort"
-	"time"
 )
 
 type Response struct {
@@ -94,15 +94,11 @@ func (p *Payment) PlaceAnOrder() (*Response, error) {
 	}
 	httpClient := resty.New()
 	var resp Response
-	logs.New().SetAdditionalInfo("body", body).SetAdditionalInfo("url", p.APIUriPrefix+CreateOrderUri).Info("记录下单的参数")
 	bodyJson, _ := json.Marshal(body)
 	fmt.Println(string(bodyJson))
 	res, err := httpClient.R().SetBody(body).SetResult(&resp).Post(p.APIUriPrefix + CreateOrderUri)
 	if err != nil {
-		fmt.Println("请求的body", body)
-		fmt.Println(res.String())
-		fmt.Println("请求失败", err)
-		return nil, err
+		return nil, fmt.Errorf("请求失败: %s body: %s response: %s", err.Error(), body, res.String())
 	}
 	return &resp, nil
 }
@@ -175,15 +171,11 @@ func (p *Payment) RenewOrder() (*Response, error) {
 	}
 	httpClient := resty.New()
 	var resp Response
-	logs.New().SetAdditionalInfo("body", body).SetAdditionalInfo("url", p.APIUriPrefix+RenewOrderUri).Info("记录下单的参数")
 	bodyJson, _ := json.Marshal(body)
 	fmt.Println(string(bodyJson))
 	res, err := httpClient.R().SetBody(body).SetResult(&resp).Post(p.APIUriPrefix + RenewOrderUri)
 	if err != nil {
-		fmt.Println("请求的body", body)
-		fmt.Println(res.String())
-		fmt.Println("请求失败", err)
-		return nil, err
+		return nil, fmt.Errorf("请求失败: %s body: %s response: %s", err.Error(), body, res.String())
 	}
 	return &resp, nil
 }

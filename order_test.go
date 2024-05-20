@@ -1,15 +1,12 @@
 package payment
 
 import (
-	"fmt"
-	"github.com/shopspring/decimal"
-	"gitlab.landui.cn/gomod/global"
-	"go.uber.org/zap"
 	"testing"
+
+	"github.com/shopspring/decimal"
 )
 
 func TestPlaceAnOrder(t *testing.T) {
-	initLog()
 	payCenter := Payment{
 		UserId:        14610,
 		UserName:      "86326328",
@@ -35,13 +32,15 @@ func TestPlaceAnOrder(t *testing.T) {
 
 	res, err := payCenter.PlaceAnOrder()
 
-	fmt.Println(res)
-	fmt.Println(err)
+	if err != nil {
+		t.Errorf("请求失败: %s", err.Error())
+	}
+
+	t.Logf("返回结果: %+v", res)
 
 }
 
 func TestPayment_RenewOrder(t *testing.T) {
-	initLog()
 	payCenter := Payment{
 		UserId:            14610,
 		UserName:          "86326328",
@@ -70,10 +69,9 @@ func TestPayment_RenewOrder(t *testing.T) {
 
 	res, err := payCenter.RenewOrder()
 
-	fmt.Println(res)
-	fmt.Println(err)
-}
+	if err != nil {
+		t.Errorf("请求失败: %s", err.Error())
+	}
 
-func initLog() {
-	global.Logger = zap.NewExample() // 需要传入 zap.AddCaller() 才会显示打日志点的文件名和行数
+	t.Logf("返回结果: %+v", res)
 }
