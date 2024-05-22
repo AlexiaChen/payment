@@ -55,14 +55,6 @@ func (p *Payment) PlaceAnOrder() (*Response, error) {
 	text := fmt.Sprintf("%d%s%s", times, randStr, p.APISignSecret)
 	newText := sorts(text)
 	ciphertext := gmd5.MustEncryptString(newText)
-
-	readableMem := ""
-	if p.Memory > 100 {
-		readableMem = fmt.Sprintf("%dM", p.Memory)
-	} else {
-		readableMem = fmt.Sprintf("%dG", p.Memory)
-	}
-
 	var orderParams []placeOrderParam
 	orderParam := placeOrderParam{
 		Stype:       "cloud_other",
@@ -72,13 +64,13 @@ func (p *Payment) PlaceAnOrder() (*Response, error) {
 		BuyTime:     fmt.Sprintf("%d个月", p.Months),
 		CallBack:    p.CallBackUrl,
 		OrderDisposition: fmt.Sprintf(
-			"实例名称:%s|硬盘:%dG|版本:%s|IOPS:%d|CPU:%d核|内存:%s|购买时长:%d个月|系列:%s",
+			"实例名称:%s|硬盘:%dG|版本:%s|IOPS:%d|CPU:%d核|内存:%dG|购买时长:%d个月|系列:%s",
 			p.InstanceName,
 			p.Disks,
 			p.Version,
 			p.Bandwidth,
 			p.Cpu,
-			readableMem,
+			p.Memory,
 			p.Months,
 			p.Type,
 		),
@@ -135,14 +127,6 @@ func (p *Payment) RenewOrder() (*Response, error) {
 	text := fmt.Sprintf("%d%s%s", times, randStr, p.APISignSecret)
 	newText := sorts(text)
 	ciphertext := gmd5.MustEncryptString(newText)
-
-	readableMem := ""
-	if p.Memory > 100 {
-		readableMem = fmt.Sprintf("%dM", p.Memory)
-	} else {
-		readableMem = fmt.Sprintf("%dG", p.Memory)
-	}
-
 	var orderParams []renewOrderParam
 	orderParam := renewOrderParam{
 		Stype:             "cloud_product_renew",
@@ -157,13 +141,13 @@ func (p *Payment) RenewOrder() (*Response, error) {
 		CurrentExpireTime: p.CurrentExpireTime,
 		RenewExpireTime:   p.RenewExpireTime,
 		OrderDisposition: fmt.Sprintf(
-			"实例名称:%s|硬盘:%dG|版本:%s|IOPS:%d|CPU:%d核|内存:%s|购买时长:%d个月|系列:%s",
+			"实例名称:%s|硬盘:%dG|版本:%s|IOPS:%d|CPU:%d核|内存:%dG|购买时长:%d个月|系列:%s",
 			p.InstanceName,
 			p.Disks,
 			p.Version,
 			p.Bandwidth,
 			p.Cpu,
-			readableMem,
+			p.Memory,
 			p.Months,
 			p.Type,
 		),
