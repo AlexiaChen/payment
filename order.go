@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"sort"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -178,17 +177,4 @@ func (p *Payment) RenewOrder() (*Response, error) {
 		return nil, fmt.Errorf("请求失败: %s body: %s response: %s", err.Error(), body, res.String())
 	}
 	return &resp, nil
-}
-
-func sorts(text string) string {
-	var array []string
-	for _, v := range text {
-		array = append(array, string(v))
-	}
-	sort.Strings(array)
-	newText := ""
-	for _, v := range array {
-		newText += v
-	}
-	return newText
 }
